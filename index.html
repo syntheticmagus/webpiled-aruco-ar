@@ -54,7 +54,7 @@
 
             var buf = Module._malloc(imageData.data.length * imageData.data.BYTES_PER_ELEMENT);
             Module.HEAPU8.set(imageData.data, buf);
-            var numMarkers = Module._process_image(canvas.width, canvas.height, buf, 0.01);
+            var numMarkers = Module._process_image(canvas.width, canvas.height, buf, 1);
             Module._free(buf);
 
             if (numMarkers > 0) {
@@ -111,9 +111,9 @@
             var scene = createScene();
 
             engine.runRenderLoop(function () {
-                sphere.position.x = 100 * x;
-                sphere.position.y = -100 * y;
-                sphere.position.z = 100 * z;
+                sphere.position.x = x;
+                sphere.position.y = -y;
+                sphere.position.z = z;
 
                 scene.render();
             });
