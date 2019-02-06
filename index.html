@@ -22,7 +22,6 @@
 </head>
 
 <body>
-
     <video autoplay="true" id="videoElement"></video>
     <script>
         if (navigator.mediaDevices.getUserMedia) {
@@ -35,16 +34,13 @@
     <canvas id="renderCanvas"></canvas>
     <canvas id="canvasElement"></canvas>
 
-    <script src="build/aruco.js"></script>
     <script>
-        function functionExists(f) {
-            return f && typeof f === "function";
-        }
-
+        // Sphere position variables; set by image processing, read by Babylon.js
         var x = 0;
         var y = 0;
         var z = 2;
 
+        // Image processing.
         var canvas = document.querySelector("#canvasElement");
         canvas.width = 320;
         canvas.height = 240;
@@ -86,14 +82,17 @@
             setTimeout(grabImage, 0);
         }
 
-        Module["onRuntimeInitialized"] = function () {
-            if (functionExists(Module._initialize)) {
+        // Launch processing on module load.
+        var Module = {
+            onRuntimeInitialized: function () {
                 Module._initialize();
-            }
+                Module._set_calibration_from_frame_size(canvas.width, canvas.height);
 
-            grabImage();
+                grabImage();
+            }
         };
 
+        // Babylon.js canvas.
         window.addEventListener('DOMContentLoaded', function () {
             var canvas = document.getElementById('renderCanvas');
             var engine = new BABYLON.Engine(canvas, true);
@@ -109,10 +108,8 @@
                 return scene;
             }
 
-            // call the createScene function
             var scene = createScene();
 
-            // run the render loop
             engine.runRenderLoop(function () {
                 sphere.position.x = 100 * x;
                 sphere.position.y = -100 * y;
@@ -121,12 +118,12 @@
                 scene.render();
             });
 
-            // the canvas/window resize event handler
             window.addEventListener('resize', function () {
                 engine.resize();
             });
         });
     </script>
+    <script src="build/aruco.js"></script>
 </body>
 
 </html>
